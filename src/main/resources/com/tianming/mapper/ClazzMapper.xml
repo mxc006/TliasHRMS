@@ -1,0 +1,41 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tianming.mapper.ClazzMapper">
+    <insert id="addClazz">
+        insert into clazz(name,begin_Date,end_Date,master_id,create_time,update_time,subject,room)
+        values(#{name},#{beginDate},#{endDate},#{masterId},#{createTime},#{updateTime},#{subject},#{room})
+    </insert>
+    <update id="putClazz">
+        UPDATE clazz
+        <set>
+            <if test="name != null and name != ''">name=#{name},</if>
+            <if test="beginDate != null">begin_date=#{beginDate},</if>
+            <if test="endDate != null">end_date=#{endDate},</if>
+            <if test="masterId != null">master_id=#{masterId},</if>
+            <if test="updateTime != null">update_time=#{updateTime},</if>
+            <if test="subject != null">subject=#{subject},</if>
+            <if test="room != null">room=#{room},</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="getClass" resultType="com.tianming.pojo.Clazz">
+        select c.*,emp.name masterName from clazz c left join emp on emp.id=c.master_id
+        <where>
+            <if test="name != null and name != ''">
+                and c.name like concat('%', #{name}, '%')
+            </if>
+            <if test="begin != null and end != null">
+                and c.begin_date between #{begin} and #{end}
+            </if>
+        </where>
+    </select>
+    <select id="selectClazzById" resultType="com.tianming.pojo.Clazz">
+        select * from clazz where id=#{id}
+    </select>
+    <select id="selectAllClazz" resultType="com.tianming.pojo.Clazz">
+        select * from clazz
+    </select>
+
+</mapper>
